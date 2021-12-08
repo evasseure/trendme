@@ -9,8 +9,7 @@
             [clojure.java.io :as io]))
 
 (def C (cache/ttl-cache-factory {} :ttl (* 12 3600000))) ;; 12 hours
-;; (def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
-(def LANGS ["javascript"])
+(def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
 
 (defn get-date [] (.format (new java.text.SimpleDateFormat "yyyy-MM-dd") (java.util.Date.)))
 
