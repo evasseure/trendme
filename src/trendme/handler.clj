@@ -8,6 +8,7 @@
             [clojure.core.cache :as cache]))
 
 (def C (cache/ttl-cache-factory {} :ttl (* 12 3600000))) ;; 12 hours
+(def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
 
 (defn get-date [] (.format (new java.text.SimpleDateFormat "yyyy-MM-dd") (java.util.Date.)))
 
@@ -28,12 +29,7 @@
     (for [article paragraphs] (map-article article))))
 
 (defn get-all-data []
-  [{:lang "javascript" :data (parse-repos (get-html-result "javascript"))}
-   {:lang "typescript" :data (parse-repos (get-html-result "typescript"))}
-   {:lang "python" :data (parse-repos (get-html-result "python"))}
-   {:lang "html" :data (parse-repos (get-html-result "html"))}
-   {:lang "rust" :data (parse-repos (get-html-result "rust"))}
-   {:lang "clojure"  :data (parse-repos (get-html-result "clojure"))}])
+  (for [lang LANGS] {:lang lang :data (parse-repos (get-html-result lang))}))
 
 (defroutes app-routes
   (GET "/" [] (selmer/render-file "./trendme/home.html" {:langs (get-all-data)}))
