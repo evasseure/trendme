@@ -5,10 +5,12 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [clojure.string :as str]
             [selmer.parser :as selmer]
-            [clojure.core.cache :as cache]))
+            [clojure.core.cache :as cache]
+            [clojure.java.io :as io]))
 
 (def C (cache/ttl-cache-factory {} :ttl (* 12 3600000))) ;; 12 hours
-(def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
+;; (def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
+(def LANGS ["javascript"])
 
 (defn get-date [] (.format (new java.text.SimpleDateFormat "yyyy-MM-dd") (java.util.Date.)))
 
@@ -32,7 +34,7 @@
   (for [lang LANGS] {:lang lang :data (parse-repos (get-html-result lang))}))
 
 (defroutes app-routes
-  (GET "/" [] (selmer/render-file "./trendme/home.html" {:langs (get-all-data)}))
+  (GET "/" [] (selmer/render-file (io/resource "home.html") {:langs (get-all-data)}))
   (route/not-found "Not Found"))
 
 (def app
