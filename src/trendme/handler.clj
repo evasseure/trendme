@@ -5,15 +5,12 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [clojure.string :as str]
             [selmer.parser :as selmer]
-            [clojure.core.cache :as cache]
             [clojure.java.io :as io]))
 
-(def C (cache/ttl-cache-factory {} :ttl (* 12 3600000))) ;; 12 hours
-(def LANGS ["javascript" "typescript" "python" "html" "rust" "clojure"])
-
-(defn get-date [] (.format (new java.text.SimpleDateFormat "yyyy-MM-dd") (java.util.Date.)))
+(def LANGS ["javascript" "typescript" "python" "html" "clojure"])
 
 (defn get-html-result [lang]
+
   (slurp (str "https://github.com/trending/" lang "?since=weekly")))
 
 (defn map-article [article]
@@ -21,8 +18,7 @@
     {"title" (second (str/split (.text h1) #" / "))
      "author" (first (str/split (.text h1) #" / "))
      "link" (str "https://github.com" (.attr (first (.getElementsByTag h1 "a")) "href"))
-     "description" (if description (.text description) nil)
-     "stars" (.text (first (.getElementsByClass article "Link--muted d-inline-block mr-3")))}))
+     "description" (if description (.text description) nil)}))
 
 (defn parse-repos [html]
   (let [soup (Jsoup/parse html)
@@ -30,7 +26,8 @@
     (for [article paragraphs] (map-article article))))
 
 (defn get-all-data []
-  (for [lang LANGS] {:lang lang :data (parse-repos (get-html-result lang))}))
+  (let [repos (for [lang LANGS] (future {:lang lang :data (parse-repos (get-html-result lang))}))]
+    (->> repos (map deref))))
 
 (defroutes app-routes
   (GET "/" [] (selmer/render-file (io/resource "home.html") {:langs (get-all-data)}))

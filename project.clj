@@ -6,8 +6,7 @@
                  [org.jsoup/jsoup "1.13.1"]
                  [compojure "1.6.1"]
                  [ring/ring-defaults "0.3.2"]
-                 [selmer "1.12.45"]
-                 [org.clojure/core.cache "0.8.0"]]
+                 [selmer "1.12.45"]]
   :plugins [[lein-ring "0.12.5"]]
   :ring {:handler trendme.handler/app}
   :profiles
