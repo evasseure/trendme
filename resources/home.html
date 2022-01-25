@@ -54,6 +54,7 @@
         padding-bottom: 16px;
         overflow: auto;
         height: 60vh;
+        overflow-x: hidden;
       }
 
       .repo:hover .repo-author {
@@ -129,7 +130,7 @@
           <div class="repo">
             <h3 class="repo-title">
               <a href="{{repo.link}}" target="_blank" rel="noopener noreferrer">{{repo.title}}</a
-              ><span class="repo-author">{{repo.title}}</span>
+              ><span class="repo-author">{{repo.author}}</span>
             </h3>
             <p class="repo-description">{{repo.description}}</p>
           </div>
