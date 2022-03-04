@@ -11,7 +11,7 @@
 
 (defn get-html-result [lang]
 
-  (slurp (str "https://github.com/trending/" lang "?since=weekly")))
+  (slurp (str "https://github.com/trending/" lang "?since=weekly&spoken_language_code=en")))
 
 (defn map-article [article]
   (let [h1 (first (.getElementsByTag article "h1")) description (first (.getElementsByTag article "p"))]
