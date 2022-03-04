@@ -6,7 +6,7 @@ It's my first project in clojure, so hopefuly the code is not too bad.
 
 By default you will have the languages: javascript, typescript, python, html, clojure.  
 To display specific languages you have to use the url parameter `l` with a comma separated list of languages.  
-ex: https://trendme.evass.co/?l=c,c++,rust  
+ex: https://trendme.evass.co/?l=c,zig,rust  
 
 Visit the website here: [Trendme](https://trendme.evass.co?t=javascript,typescript,html,css)
 
