@@ -7,7 +7,7 @@
             [selmer.parser :as selmer]
             [clojure.java.io :as io]))
 
-(def LANGS ["javascript" "typescript" "python" "html" "clojure"])
+(def DEFAULT_LANGS "javascript,typescript,python,html,clojure")
 
 (defn get-html-result [lang]
 
@@ -25,12 +25,12 @@
         paragraphs (.getElementsByTag soup "article")]
     (for [article paragraphs] (map-article article))))
 
-(defn get-all-data []
-  (let [repos (for [lang LANGS] (future {:lang lang :data (parse-repos (get-html-result lang))}))]
-    (->> repos (map deref))))
+(defn get-all-data
+  [langs] (let [repos (for [lang (str/split langs #",")] (future {:lang lang :data (parse-repos (get-html-result lang))}))] (->> repos (map deref))))
 
 (defroutes app-routes
-  (GET "/" [] (selmer/render-file (io/resource "home.html") {:langs (get-all-data)}))
+  (GET "/" {params :params} (selmer/render-file (io/resource "home.html") {:langs (get-all-data (get params :l DEFAULT_LANGS))}))
+  (route/resources "/")
   (route/not-found "Not Found"))
 
 (def app
